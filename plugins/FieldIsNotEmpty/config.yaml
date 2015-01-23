@@ -1,0 +1,24 @@
+id: FieldIsNotEmpty
+name: FieldIsNotEmpty
+key: fieldisnotempty
+version: 1.0
+author_link: https://alfasado.net/
+author_name: Alfasado Inc.
+l10n_class: FieldIsNotEmpty::L10N
+description: <__trans phrase='Modifier field.foo="IS NOT EMPTY" is available in "MTEntries" tag.'>
+tags:
+    block:
+        Entries: >
+            sub {
+                my ( $ctx, $args, $cond ) = @_;
+                foreach my $arg ( keys %$args ) {
+                    if ( $arg =~ m/^field:(.+)$/ ) {
+                        if ( $args->{ $arg } eq 'IS NOT EMPTY' ) {
+                            $args->{ $arg } = { not => '' };
+                        }
+                    }
+                }
+                defined( my $result = $ctx->super_handler( $args, $cond ) )
+                    or return $ctx->error( $ctx->errstr );
+                return $result;
+            }
